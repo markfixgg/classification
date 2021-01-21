@@ -13,12 +13,10 @@ const readImage = path => {
     return tfnode.node.decodeImage(imageBuffer); // Возвращает tensor
 }
 
+// LOAD MODEL
 const model = new TeachableMachine({
     modelUrl: config.modelURL
 });
-
-
-// TODO: Import custom weapon model
 
 function classify(base64str, res){
     var buf = Buffer.from(base64str,'base64');
@@ -31,8 +29,7 @@ function classify(base64str, res){
      .then((value)=>{
         console.log(value) // Результат сохранения файла
         new Promise(async function(resolve, reject) { 
-            const image = readImage("output.jpg");
-            // LOAD MODEL
+            // PREDICT
             model.classify({
                 imageUrl: "http://127.0.0.1/getimage",
               }).then((predictions) => {
@@ -42,7 +39,6 @@ function classify(base64str, res){
                 console.log("ERROR", e);
                 reject("error")
               });
-            // PREDICT
         })
         .then((val)=>{ 
             res.send(val) // Отправляем результат классификации
