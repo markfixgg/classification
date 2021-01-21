@@ -7,15 +7,16 @@ const fs = require('fs')
 
 const readImage = path => {
     const imageBuffer = fs.readFileSync(path);
-    const tfimage = tfnode.node.decodeImage(imageBuffer); // Возвращает tensor
-    
-    return tfimage;
+    return tfnode.node.decodeImage(imageBuffer); // Возвращает tensor
 }
+
+// TODO: Import custom weapon model
 
 function saveImageToFile(base64str, res){
     var buf = Buffer.from(base64str,'base64');
     const outputData = new Promise(function(resolve, reject) {
         sharp(buf)
+        .flatten({ background: { r: 255, g: 255, b: 255 } })
         .resize(1000, 500)
         .toFile('output.jpg', (err, info) => resolve("New image was saved! \n"));   // Ресайзим и сохраняем файл     
      })
@@ -29,7 +30,6 @@ function saveImageToFile(base64str, res){
             const predictions = await mobilenetModel.classify(image);
             console.log('Classification Results:', predictions);
             resolve(predictions);
-            
         })
         .then((val)=>{ 
             res.send(val) // Отправляем результат классификации
