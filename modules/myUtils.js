@@ -1,5 +1,4 @@
 const tf = require('@tensorflow/tfjs');
-const mobilenet = require('@tensorflow-models/mobilenet');
 const tfnode = require('@tensorflow/tfjs-node');
 var path = require('path');
 const sharp = require('sharp');
