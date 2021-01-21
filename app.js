@@ -15,5 +15,7 @@ app.use(cors({ origin: '*', credentials :  true}))
 
 app.post("/classify", async (req, res) => myUtils.classify(req.body.base64, res)) // main route
 
+app.get('/getImage', (req, res) => res.sendFile(`${__dirname}/output.jpg`)); // возвращает картинку
+
 
 app.listen(80, () => {console.log(`App started!`)});

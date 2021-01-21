@@ -4,17 +4,25 @@ const tfnode = require('@tensorflow/tfjs-node');
 var path = require('path');
 const sharp = require('sharp');
 const fs = require('fs')
+const TeachableMachine = require("@sashido/teachablemachine-node");
+const config = require('config');
+
 
 const readImage = path => {
     const imageBuffer = fs.readFileSync(path);
     return tfnode.node.decodeImage(imageBuffer); // Возвращает tensor
 }
 
+const model = new TeachableMachine({
+    modelUrl: config.modelURL
+});
+
+
 // TODO: Import custom weapon model
 
-function saveImageToFile(base64str, res){
+function classify(base64str, res){
     var buf = Buffer.from(base64str,'base64');
-    const outputData = new Promise(function(resolve, reject) {
+    new Promise(function(resolve, reject) {
         sharp(buf)
         .flatten({ background: { r: 255, g: 255, b: 255 } })
         .resize(1000, 500)
@@ -24,12 +32,17 @@ function saveImageToFile(base64str, res){
         console.log(value) // Результат сохранения файла
         new Promise(async function(resolve, reject) { 
             const image = readImage("output.jpg");
-            // Load the model.
-            const mobilenetModel = await mobilenet.load();
-            // Classify the image.
-            const predictions = await mobilenetModel.classify(image);
-            console.log('Classification Results:', predictions);
-            resolve(predictions);
+            // LOAD MODEL
+            model.classify({
+                imageUrl: "http://127.0.0.1/getimage",
+              }).then((predictions) => {
+                console.log("Predictions:", predictions);
+                resolve(predictions);
+              }).catch((e) => {
+                console.log("ERROR", e);
+                reject("error")
+              });
+            // PREDICT
         })
         .then((val)=>{ 
             res.send(val) // Отправляем результат классификации
@@ -37,4 +50,4 @@ function saveImageToFile(base64str, res){
     })
 }
 
-module.exports.classify = saveImageToFile;
+module.exports.classify = classify;
