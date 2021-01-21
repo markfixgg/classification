@@ -1,4 +1,7 @@
-# classification
-Classify gun from CS:GO by sending base64 image. Result was in JSON response.
+# Classification
+Classify images by sending base64 image. Result was in JSON response.
+
+Train custom model: https://teachablemachine.withgoogle.com/
+Change link to model in config
 
 
