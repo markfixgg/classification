@@ -39,8 +39,8 @@ function classify(base64str, res){
                 reject("error")
               });
         })
-        .then((val)=>{ 
-            res.send(val) // Отправляем результат классификации
+        .then((prediction)=>{ 
+            res.send(prediction) // Отправляем результат классификации
         })
     })
 }
